@@ -1,7 +1,9 @@
 {
   "endOfLine": "lf",
-  "semi": false,
-  "singleQuote": false,
+  "semi": true,
+  "singleQuote": true,
   "tabWidth": 2,
-  "trailingComma": "es5"
+  "jsxSingleQuote": true,
+  "trailingComma": "none",
+  "bracketSpacing": true
 }
