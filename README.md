@@ -1,9 +1,6 @@
 # spark-joy
 A little widget to ask your fans if what you made sparked joy. :)
 
-Created during a live video series.
-Roadmap 🏵 https://docs.google.com/document/d/14IhO3lVyJSffvDzqE5rHhsqIUf4T6Hvk9dH6INV0dx0/edit
-
 ## REQUIREMENTS:
 - thumbs up/down entry point
     - follow up questions
