@@ -13,7 +13,7 @@ const IndexPage = () => (
     <SEO />
     <CentralColumn style={{ paddingTop: '2em' }}>
       <p>Did your thing spark joy? Ask the fans and get some feedback :)</p>
-      <p>Fill out the widget, export to HTML, insert anywhere.</p>
+      <p>Fill out the widget, export to HTML, insert anywhere. 👇</p>
       <WidgetBuilder />
     </CentralColumn>
   </Layout>
