@@ -5,6 +5,7 @@ import { Button } from 'rebass';
 
 import { Heading, Flex } from './styles';
 import { palette } from 'styled-tools';
+import ButterToast, { Cinnamon } from 'butter-toast';
 import { copyToClipboard } from '../utils';
 
 const Input = styled.input`
@@ -80,6 +81,16 @@ const WidgetBuilder = () => {
     const el = document.createElement('div');
     ReactDOM.render(<Widget value={typeOfJoy} />, el);
     copyToClipboard(el.innerHTML);
+
+    ButterToast.raise({
+      content: (
+        <Cinnamon.Crisp
+          scheme={Cinnamon.Crisp.SCHEME_BLUE}
+          title='Copied to Clipboard'
+          content={() => <div>👍 Paste HTML into your favorite editor</div>}
+        />
+      )
+    });
   }
 
   return (
