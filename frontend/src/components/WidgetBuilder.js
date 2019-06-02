@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import { Button } from 'rebass';
@@ -6,7 +6,7 @@ import { Button } from 'rebass';
 import { Heading, Flex } from './styles';
 import { palette } from 'styled-tools';
 import ButterToast, { Cinnamon } from 'butter-toast';
-import { copyToClipboard } from '../utils';
+import { copyToClipboard, getCSS } from '../utils';
 
 const Input = styled.input`
   border: 0;
@@ -52,8 +52,8 @@ const Question = styled(Heading)`
   text-align: center;
 `;
 
-const Widget = ({ editable, value, update }) => (
-  <WidgetLayout>
+const Widget = React.forwardRef(({ editable, value, update }, ref) => (
+  <WidgetLayout ref={ref}>
     <Question h2>
       Did this{' '}
       {editable ? (
@@ -72,15 +72,20 @@ const Widget = ({ editable, value, update }) => (
       <RoundButton>👍</RoundButton>
     </Flex>
   </WidgetLayout>
-);
+));
 
 const WidgetBuilder = () => {
   const [typeOfJoy, setTypeOfJoy] = useState('');
 
   function exportWidget() {
+    const widgetRef = React.createRef();
+    const widget = <Widget value={typeOfJoy} ref={widgetRef} />;
     const el = document.createElement('div');
-    ReactDOM.render(<Widget value={typeOfJoy} />, el);
-    copyToClipboard(el.innerHTML);
+    ReactDOM.render(widget, el);
+    const styles = getCSS(widgetRef.current);
+    const html = `<style>${styles}</style>${el.innerHTML}`;
+
+    copyToClipboard(html);
 
     ButterToast.raise({
       content: (
