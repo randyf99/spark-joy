@@ -1,0 +1,7 @@
+import { server } from './src/graphql';
+
+console.log(server);
+
+// server.listen().then(({url}: {url: string }) => {
+//   console.log(`🚀 Server ready at ${url}`);
+// });
