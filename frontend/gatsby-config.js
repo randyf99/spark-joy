@@ -1,3 +1,6 @@
+const SERVER_URI =
+  'https://gcb3s0qgg0.execute-api.us-east-1.amazonaws.com/dev/graphql';
+
 module.exports = {
   siteMetadata: {
     title: `Spark Joy`,
@@ -11,6 +14,15 @@ module.exports = {
       options: {
         name: `images`,
         path: `${__dirname}/src/images`
+      }
+    },
+    {
+      resolve: `gatsby-source-graphql`,
+      options: {
+        typeName: `WIDGET`,
+        fieldName: `widgetsapi`,
+        url: SERVER_URI,
+        refetchInterval: 60
       }
     },
     `gatsby-transformer-sharp`,
