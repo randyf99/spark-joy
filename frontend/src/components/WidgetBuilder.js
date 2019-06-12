@@ -7,6 +7,16 @@ import { Heading, Flex } from './styles';
 import { palette } from 'styled-tools';
 import ButterToast, { Cinnamon } from 'butter-toast';
 import { copyToClipboard, getCSS } from '../utils';
+import gql from 'graphql-tag';
+import { useApolloClient } from 'react-apollo-hooks';
+
+const SAVE_WIDGET_QUERY = gql`
+  mutation saveWidget($name: String!, $widgetId: String) {
+    saveWidget(name: $name, widgetId: $widgetId) {
+      widgetId
+    }
+  }
+`;
 
 const Input = styled.input`
   border: 0;
@@ -76,16 +86,28 @@ const Widget = React.forwardRef(({ editable, value, update }, ref) => (
 
 const WidgetBuilder = () => {
   const [typeOfJoy, setTypeOfJoy] = useState('');
+  const apolloClient = useApolloClient();
 
-  function exportWidget() {
+  async function exportWidget() {
     const widgetRef = React.createRef();
+
     const widget = <Widget value={typeOfJoy} ref={widgetRef} />;
     const el = document.createElement('div');
     ReactDOM.render(widget, el);
+
     const styles = getCSS(widgetRef.current);
     const html = `<style>${styles}</style>${el.innerHTML}`;
 
     copyToClipboard(html);
+
+    const result = await apolloClient.mutate({
+      mutation: SAVE_WIDGET_QUERY,
+      variables: {
+        name: typeOfJoy
+      }
+    });
+
+    console.log(result);
 
     ButterToast.raise({
       content: (

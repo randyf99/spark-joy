@@ -7,14 +7,16 @@ import Layout from '../components/layout';
 import SEO from '../components/seo';
 
 import WidgetBuilder from '../components/WidgetBuilder';
+import WidgetList from '../components/WidgetList';
 
 const IndexPage = () => (
   <Layout>
-    <SEO />
+    <SEO title='Home' />
     <CentralColumn style={{ paddingTop: '2em' }}>
       <p>Did your thing spark joy? Ask the fans and get some feedback :)</p>
       <p>Fill out the widget, export to HTML, insert anywhere. 👇</p>
       <WidgetBuilder />
+      <WidgetList />
     </CentralColumn>
   </Layout>
 );
