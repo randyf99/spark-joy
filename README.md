@@ -33,3 +33,8 @@ A little widget to ask your fans if what you made sparked joy. :)
     - either Zeit or Netlify
 - Stripe for monetization
 - design system with Reakit and themes
+
+# Backend Commands
+
+- sls deploy
+- ts-node localServer.ts
