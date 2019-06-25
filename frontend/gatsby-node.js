@@ -36,6 +36,7 @@ exports.createPages = ({ graphql, actions }) => {
         path: `/${widgetId}/thumbsup`,
         component: componentPath,
         context: {
+          widgetId,
           voteType: 'thumbsup'
         }
       });
@@ -44,6 +45,7 @@ exports.createPages = ({ graphql, actions }) => {
         path: `/${widgetId}/thumbsdown`,
         component: componentPath,
         context: {
+          widgetId,
           voteType: 'thumbsdown'
         }
       });
