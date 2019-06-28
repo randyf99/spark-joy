@@ -1,6 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import { CentralColumn, Heading } from '../components/styles';
 import { useApolloClient } from 'react-apollo-hooks';
+import { PacmanLoader } from 'react-spinners';
+import theme from '../components/theme';
+import { Card } from 'rebass';
 
 import Layout from '../components/layout';
 // import Image from '../components/image';
@@ -18,19 +21,81 @@ async function getWidget({ widgetId, apolloClient }) {
   return result.data.widget;
 }
 
-const widgetPage = ({ pageContext }) => {
+function useWidgetState({ widgetId, name }) {
   const apolloClient = useApolloClient();
-  const { widgetId, name } = pageContext;
-  console.log(widgetId, name);
+
+  const [state, dispatch] = useReducer(
+    (state, action) => {
+      switch (action.type) {
+        case 'loading':
+          return { ...state, loading: true };
+        case 'loaded':
+          return { ...state, loading: false, ...action.widget };
+        default:
+          return state;
+      }
+    },
+    { name, thumbsup: 0, thumbsdown: 0, loading: false }
+  );
+
   useEffect(() => {
-    getWidget({ widgetId, apolloClient });
+    dispatch({ type: 'loading' });
+    (async () => {
+      const widget = await getWidget({
+        widgetId,
+        apolloClient
+      });
+      dispatch({ type: 'loaded', ...widget });
+    })();
   }, []);
+
+  return state;
+}
+
+const Votes = ({ thumbsup, thumbsdown }) => (
+  <>
+    <Card
+      fontSize={5}
+      fontWeight='bold'
+      width={[1, 1, 1 / 2]}
+      p={3}
+      my={3}
+      bg='#f6f6ff'
+      borderRadius={8}
+      boxShadow='0 2px 16x rgba(0, 0, 0, 0.25)'
+    >
+      👍 {thumbsup}
+    </Card>
+    <Card
+      fontSize={5}
+      fontWeight='bold'
+      width={[1, 1, 1 / 2]}
+      p={3}
+      my={3}
+      bg='#f6f6ff'
+      borderRadius={8}
+      boxShadow='0 2px 16x rgba(0, 0, 0, 0.25)'
+    >
+      👎 {thumbsdown}
+    </Card>
+  </>
+);
+
+const widgetPage = ({ pageContext }) => {
+  const { name, thumbsup, thumbsdown, loading } = useWidgetState(pageContext);
 
   return (
     <Layout>
       <SEO title='Thank You' />
       <CentralColumn style={{ paddingTop: '2em' }}>
         <Heading h2>Did {name} spark joy?</Heading>
+        <PacmanLoader
+          sizeUnit={'px'}
+          size={50}
+          color={theme.colors.primary}
+          loading={loading}
+        />
+        {loading ? null : <Votes thumbsup={thumbsup} thumbsdown={thumbsdown} />}
       </CentralColumn>
     </Layout>
   );
