@@ -24,3 +24,13 @@ export const WIDGET_VOTE_QUERY = gql`
     }
   }
 `;
+
+export const WIDGET_QUERY = gql`
+  query widget($widgetId: String!) {
+    widget(widgetId: $widgetId) {
+      name
+      thumbsup
+      thumbsdown
+    }
+  }
+`;
