@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { CentralColumn } from '../components/styles';
 import { useApolloClient } from 'react-apollo-hooks';
+import { Form, Field } from 'react-final-form';
+import {Button} from 'rebass';
 
 import Layout from '../components/layout';
 // import Image from '../components/image';
@@ -8,7 +10,7 @@ import SEO from '../components/seo';
 import { WIDGET_VOTE_QUERY } from '../queries';
 
 async function saveVote({ widgetId, voteType, apolloClient }) {
-  const result = await apolloClient.mutate({
+  await apolloClient.mutate({
     mutation: WIDGET_VOTE_QUERY,
     variables: {
       widgetId: widgetId,
@@ -18,11 +20,22 @@ async function saveVote({ widgetId, voteType, apolloClient }) {
   });
 }
 
+function renderField({ id, label, type }) {
+  return (
+    <div>
+      <label>{label}</label><br />
+      <Field name={`field_${id}`} component='input' type='text' initialValue='' placeholder='Listen to your gut :)' />
+    </div>
+  );
+}
+
+const onSubmit = async values => {
+  window.alert(JSON.stringify(values, 0, 2));
+};
+
 const VotePage = ({ pageContext }) => {
   const apolloClient = useApolloClient();
   const { widgetId, voteType, followupQuestions } = pageContext;
-
-  console.log(followupQuestions);
 
   useEffect(() => {
     saveVote({ widgetId, voteType, apolloClient });
@@ -32,7 +45,15 @@ const VotePage = ({ pageContext }) => {
     <Layout>
       <SEO title='Thank You' />
       <CentralColumn style={{ paddingTop: '2em' }}>
-        <p>Thank you, you are the best!</p>
+        <Form
+          onSubmit={onSubmit}
+          render={({handleSubmit}) => (
+            <form onSubmit={handleSubmit}>
+              {followupQuestions.map(renderField)}
+              <Button type='submit'>Give feedback</Button>
+            </form>
+          )}
+        />
       </CentralColumn>
     </Layout>
   );
