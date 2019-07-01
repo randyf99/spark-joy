@@ -6,7 +6,7 @@ interface UpdateItemParams {
   TableName?: string;
   Key: { [key: string]: string; };
   UpdateExpression: string;
-  ExpressionAttributeValues: { [key: string]: string | number; };
+  ExpressionAttributeValues: { [key: string]: string | number | undefined | null; };
   ReturnValues?: string;
 }
 

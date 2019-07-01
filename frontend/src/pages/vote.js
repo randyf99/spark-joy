@@ -22,7 +22,7 @@ async function saveVote({ widgetId, voteType, apolloClient }) {
 
 const VotePage = ({ pageContext }) => {
   const apolloClient = useApolloClient();
-  const { widgetId, voteType } = pageContext;
+  const { widgetId, voteType, followupQuestions } = pageContext;
 
   useEffect(() => {
     saveVote({ widgetId, voteType, apolloClient });
