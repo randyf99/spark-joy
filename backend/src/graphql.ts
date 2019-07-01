@@ -12,6 +12,11 @@ const typeDefs = gql`
     followupQuestions: String
   }
 
+  type Feedback {
+    widgetId: String!
+    values: String!
+  }
+
   type Query {
     widget(widgetId: String!): Widget
     allWidget: [Widget]
@@ -20,6 +25,9 @@ const typeDefs = gql`
   type Mutation {
     saveWidget(name: String!, widgetId: String, followupQuestions: String): Widget
     widgetVote(widgetId: String!, thumbsup: Boolean, thumbsdown: Boolean): Widget
+    saveFeedback(
+      widgetId: String!
+      values: String!): Feedback
   }
 `;
 
@@ -100,7 +108,23 @@ const resolvers = {
         ...Attributes,
         name: Attributes && Attributes.widgetName
       }
-    }
+    },
+   saveFeedback: async (
+     _: any,
+    { widgetId, values }: { widgetId: string, values: any }
+    ) => {
+      const { Attributes } = await updateItem({
+        TableName: process.env.FEEDBACKS_TABLE!,
+        Key: { widgetId },
+        UpdateExpression: "SET values = :values",
+        ExpressionAttributeValues: {
+          ":values": values
+        },
+        ReturnValues: "ALL_NEW"
+      });
+
+      return Attributes;
+   }
   }
 };
 

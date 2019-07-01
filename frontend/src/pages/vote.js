@@ -2,12 +2,12 @@ import React, { useEffect } from 'react';
 import { CentralColumn } from '../components/styles';
 import { useApolloClient } from 'react-apollo-hooks';
 import { Form, Field } from 'react-final-form';
-import {Button} from 'rebass';
+import { Button } from 'rebass';
 
 import Layout from '../components/layout';
 // import Image from '../components/image';
 import SEO from '../components/seo';
-import { WIDGET_VOTE_QUERY } from '../queries';
+import { WIDGET_VOTE_QUERY, SAVE_WIDGET_FEEDBACK_QUERY } from '../queries';
 
 async function saveVote({ widgetId, voteType, apolloClient }) {
   await apolloClient.mutate({
@@ -23,14 +23,27 @@ async function saveVote({ widgetId, voteType, apolloClient }) {
 function renderField({ id, label, type }) {
   return (
     <div>
-      <label>{label}</label><br />
-      <Field name={`field_${id}`} component='input' type='text' initialValue='' placeholder='Listen to your gut :)' />
+      <label>{label}</label>
+      <br />
+      <Field
+        name={`field_${id}`}
+        component='input'
+        type='text'
+        initialValue=''
+        placeholder='Listen to your gut :)'
+      />
     </div>
   );
 }
 
-const onSubmit = async values => {
-  window.alert(JSON.stringify(values, 0, 2));
+const onSubmit = async ({ widgetId, values, apolloClient }) => {
+  await apolloClient.mutate({
+    mutation: SAVE_WIDGET_FEEDBACK_QUERY,
+    variables: {
+      widgetId,
+      values: JSON.stringify(values)
+    }
+  });
 };
 
 const VotePage = ({ pageContext }) => {
@@ -46,8 +59,8 @@ const VotePage = ({ pageContext }) => {
       <SEO title='Thank You' />
       <CentralColumn style={{ paddingTop: '2em' }}>
         <Form
-          onSubmit={onSubmit}
-          render={({handleSubmit}) => (
+          onSubmit={values => onSubmit({ widgetId, values, apolloClient })}
+          render={({ handleSubmit }) => (
             <form onSubmit={handleSubmit}>
               {followupQuestions.map(renderField)}
               <Button type='submit'>Give feedback</Button>
