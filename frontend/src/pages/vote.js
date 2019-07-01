@@ -16,13 +16,13 @@ async function saveVote({ widgetId, voteType, apolloClient }) {
       thumbsdown: voteType === 'thumbsdown'
     }
   });
-
-  console.log(result);
 }
 
 const VotePage = ({ pageContext }) => {
   const apolloClient = useApolloClient();
   const { widgetId, voteType, followupQuestions } = pageContext;
+
+  console.log(followupQuestions);
 
   useEffect(() => {
     saveVote({ widgetId, voteType, apolloClient });
