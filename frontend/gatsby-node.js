@@ -47,6 +47,7 @@ exports.createPages = ({ graphql, actions }) => {
           context: {
             widgetId,
             followupQuestions,
+            name,
             voteType: 'thumbsup'
           }
         });
@@ -57,6 +58,7 @@ exports.createPages = ({ graphql, actions }) => {
           context: {
             widgetId,
             followupQuestions,
+            name,
             voteType: 'thumbsdown'
           }
         });
