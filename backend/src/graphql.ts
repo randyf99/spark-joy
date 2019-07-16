@@ -26,7 +26,7 @@ const typeDefs = gql`
     saveWidget(name: String!, widgetId: String, followupQuestions: String): Widget
     widgetVote(widgetId: String!, thumbsup: Boolean, thumbsdown: Boolean): Widget
     saveFeedback(
-      widgetId: String!
+      widgetId: String!,
       answers: String!): Feedback
   }
 `;
@@ -111,7 +111,7 @@ const resolvers = {
     },
    saveFeedback: async (
      _: any,
-    { widgetId, answers }: { widgetId: string, answers: any }
+    { widgetId, answers }: { widgetId: string; answers: any }
     ) => {
       const { Attributes } = await updateItem({
         TableName: process.env.FEEDBACKS_TABLE!,
