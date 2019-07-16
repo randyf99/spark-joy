@@ -5,5 +5,10 @@ export default {
   },
   colors: {
     primary: 'magenta'
+  },
+  buttons: {
+    helper: {
+      backgroundColor: 'magenta'
+    }
   }
 };
