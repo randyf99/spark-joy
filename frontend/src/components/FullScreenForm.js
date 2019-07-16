@@ -4,7 +4,6 @@ import { Button, Heading, Text, Box, Flex } from 'rebass';
 import styled from 'styled-components';
 import { fontSize, lineHeight, fontFamily } from 'styled-system';
 import posed, { PoseGroup } from 'react-pose';
-import { prop } from 'styled-tools';
 
 const Input = styled('input')(
   {
@@ -87,10 +86,9 @@ export const FullScreenForm = ({ onSubmit, followupQuestions }) => {
   const [fieldIndex, setFieldIndex] = useState(0);
 
   function handleSubmit(values) {
-    if (fieldIndex >= followupQuestions.length - 1) {
-      console.log(values);
-      // onSubmit(values);
-    } else {
+    onSubmit(values);
+
+    if (fieldIndex < followupQuestions.length) {
       setFieldIndex(fieldIndex + 1);
     }
   }
