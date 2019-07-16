@@ -4,6 +4,7 @@ import { Button, Heading, Text, Box, Flex } from 'rebass';
 import styled from 'styled-components';
 import { fontSize, lineHeight, fontFamily } from 'styled-system';
 import posed, { PoseGroup } from 'react-pose';
+import { prop } from 'styled-tools';
 
 const Input = styled('input')(
   {
@@ -33,8 +34,14 @@ const BulletText = styled(Text)`
   display: inline;
 `;
 
+const PosedInputGroup = posed.div({
+  preEnter: { y: -1000, opacity: 0 },
+  enter: { y: 0, opacity: 1 },
+  exit: { y: 1000, opacity: 0 }
+});
+
 const InputComponent = props => (
-  <InputBox>
+  <InputBox key={props.input.name}>
     <BulletText fontSize={[1, 2, 3]}>{props.index + 1}. 👉</BulletText>
     <Input
       fontSize={[3, 4, 5]}
@@ -43,7 +50,7 @@ const InputComponent = props => (
       {...props.input}
     />
     <PoseGroup>
-      {true ? (
+      {props.meta.active ? (
         <ExplainerText fontSize={[0.5, 1, 1]} key='explainer'>
           <strong>Enter</strong> to submit, or{' '}
           <Button variant='helper' type='submit'>
@@ -57,19 +64,20 @@ const InputComponent = props => (
 
 function renderField({ index, id, label, type }) {
   return (
-    <div key={id}>
+    <PosedInputGroup key={`group_${id}`} preEnterPose='preEnter'>
       <Heading fontSize={(4, 5, 6)}>
         <label>{label}</label>
       </Heading>
-      <br />
+      <br key='break' />
       <Field
+        key={`field_${id}`}
         name={`field_${id}`}
         component={InputComponent}
         type='text'
         initialValue=''
         index={index}
       />
-    </div>
+    </PosedInputGroup>
   );
 }
 
@@ -90,10 +98,12 @@ export const FullScreenForm = ({ onSubmit, followupQuestions }) => {
       onSubmit={handleSubmit}
       render={({ handleSubmit }) => (
         <form onSubmit={handleSubmit}>
-          {renderField({
-            index: fieldIndex,
-            ...followupQuestions[fieldIndex]
-          })}
+          <PoseGroup>
+            {renderField({
+              index: fieldIndex,
+              ...followupQuestions[fieldIndex]
+            })}
+          </PoseGroup>
         </form>
       )}
     />
