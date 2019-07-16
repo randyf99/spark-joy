@@ -14,7 +14,7 @@ const typeDefs = gql`
 
   type Feedback {
     widgetId: String!
-    values: String!
+    answers: String!
   }
 
   type Query {
@@ -27,7 +27,7 @@ const typeDefs = gql`
     widgetVote(widgetId: String!, thumbsup: Boolean, thumbsdown: Boolean): Widget
     saveFeedback(
       widgetId: String!
-      values: String!): Feedback
+      answers: String!): Feedback
   }
 `;
 
@@ -111,14 +111,14 @@ const resolvers = {
     },
    saveFeedback: async (
      _: any,
-    { widgetId, values }: { widgetId: string, values: any }
+    { widgetId, answers }: { widgetId: string, answers: any }
     ) => {
       const { Attributes } = await updateItem({
         TableName: process.env.FEEDBACKS_TABLE!,
         Key: { widgetId },
-        UpdateExpression: "SET values = :values",
+        UpdateExpression: "SET answers = :values",
         ExpressionAttributeValues: {
-          ":values": values
+          ":answers": answers
         },
         ReturnValues: "ALL_NEW"
       });

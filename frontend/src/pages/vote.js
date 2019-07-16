@@ -28,18 +28,6 @@ async function saveVote({ widgetId, voteType, apolloClient }) {
   });
 }
 
-// Final submission method
-//
-// const onSubmit = async ({ widgetId, values, apolloClient }) => {
-//   await apolloClient.mutate({
-//     mutation: SAVE_WIDGET_FEEDBACK_QUERY,
-//     variables: {
-//       widgetId,
-//       values: JSON.stringify(values)
-//     }
-//   });
-// };
-
 const VoteTypeHeading = ({ voteType, name }) =>
   voteType === 'thumbsup' ? (
     <Heading fontSize={[5, 6, 7]}>👍 You enjoyed Randy's {name} 👍</Heading>
@@ -75,11 +63,17 @@ const VotePage = ({ pageContext }) => {
     saveVote({ widgetId, voteType, apolloClient });
   }, []);
 
-  function onSubmit(values) {
-    if (Object.values(values).length >= followupQuestions.length) {
+  async function onSubmit(answers) {
+    if (Object.values(answers).length >= followupQuestions.length) {
       setShowThankYou(true);
     }
-    console.log(values);
+    await apolloClient.mutate({
+      mutation: SAVE_WIDGET_FEEDBACK_QUERY,
+      variables: {
+        widgetId,
+        answers: JSON.stringify(answers)
+      }
+    });
   }
 
   return (
