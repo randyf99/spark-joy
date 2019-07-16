@@ -1,12 +1,47 @@
 import React, { useEffect, useState } from 'react';
-import { CentralColumn } from '../components/styles';
 import { useApolloClient } from 'react-apollo-hooks';
 import { Form, Field } from 'react-final-form';
-import { Button } from 'rebass';
+import { Button, Heading, Text, Box, Flex } from 'rebass';
+import styled from 'styled-components';
+import { fontSize, lineHeight, fontFamily } from 'styled-system';
 
 // import Image from '../components/image';
 import SEO from '../components/seo';
 import { WIDGET_VOTE_QUERY, SAVE_WIDGET_FEEDBACK_QUERY } from '../queries';
+
+const Fullscreen = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  align-items: center;
+  min-height: 100vh;
+  text-align: center;
+`;
+
+const Input = styled('input')(
+  {
+    padding: '0.5rem 1rem',
+    width: '80%',
+    border: 0
+  },
+  fontSize,
+  lineHeight,
+  fontFamily
+);
+
+const InputBox = styled(Box)`
+  height: 60px;
+`;
+
+const ExplainerText = styled(Text)`
+  width: 80%;
+  text-align: left;
+  display: inline-block;
+`;
+
+const BulletText = styled(Text)`
+  display: inline;
+`;
 
 async function saveVote({ widgetId, voteType, apolloClient }) {
   await apolloClient.mutate({
@@ -19,17 +54,35 @@ async function saveVote({ widgetId, voteType, apolloClient }) {
   });
 }
 
-function renderField({ id, label, type }) {
+const InputComponent = props => (
+  <InputBox>
+    <BulletText fontSize={[1, 2, 3]}>{props.index + 1}. 👉</BulletText>
+    <Input
+      fontSize={[3, 4, 5]}
+      placeholder='Listen to your gut :)'
+      {...props.input}
+    />
+    {props.meta.active ? (
+      <ExplainerText fontSize={[0.5, 1, 1]}>
+        <strong>Enter</strong> to submit
+      </ExplainerText>
+    ) : null}
+  </InputBox>
+);
+
+function renderField({ index, id, label, type }) {
   return (
     <div key={id}>
-      <label>{label}</label>
+      <Heading fontSize={(4, 5, 6)}>
+        <label>{label}</label>
+      </Heading>
       <br />
       <Field
         name={`field_${id}`}
-        component='input'
+        component={InputComponent}
         type='text'
         initialValue=''
-        placeholder='Listen to your gut :)'
+        index={index}
       />
     </div>
   );
@@ -66,20 +119,21 @@ const VotePage = ({ pageContext }) => {
   }
 
   return (
-    <>
+    <Fullscreen>
       <SEO title='Thank You' />
-      <CentralColumn style={{ paddingTop: '2em' }}>
-        <Form
-          // onSubmit={values => onSubmit({ widgetId, values, apolloClient })}
-          onSubmit={onSubmit}
-          render={({ handleSubmit }) => (
-            <form onSubmit={handleSubmit}>
-              {renderField(followupQuestions[fieldIndex])}
-            </form>
-          )}
-        />
-      </CentralColumn>
-    </>
+      <Form
+        // onSubmit={values => onSubmit({ widgetId, values, apolloClient })}
+        onSubmit={onSubmit}
+        render={({ handleSubmit }) => (
+          <form onSubmit={handleSubmit}>
+            {renderField({
+              index: fieldIndex,
+              ...followupQuestions[fieldIndex]
+            })}
+          </form>
+        )}
+      />
+    </Fullscreen>
   );
 };
 
