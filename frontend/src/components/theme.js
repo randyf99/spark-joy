@@ -8,7 +8,9 @@ export default {
   },
   buttons: {
     helper: {
-      backgroundColor: 'magenta'
+      backgroundColor: 'magenta',
+      padding: '0.2rem 0.5rem',
+      cursor: 'pointer'
     }
   }
 };
