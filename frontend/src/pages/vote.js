@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useApolloClient } from 'react-apollo-hooks';
 import styled from 'styled-components';
 import { Heading } from 'rebass';
-// import Image from '../components/image';
+import uuidv4 from 'uuid/v4';
 import SEO from '../components/seo';
 import { WIDGET_VOTE_QUERY, SAVE_WIDGET_FEEDBACK_QUERY } from '../queries';
 import { FullScreenForm } from '../components/FullScreenForm';
@@ -58,9 +58,11 @@ const VotePage = ({ pageContext }) => {
   const apolloClient = useApolloClient();
   const { widgetId, voteType, followupQuestions, name } = pageContext;
   const [showThankYou, setShowThankYou] = useState(false);
+  const [voteId, setVoteId] = useState(uuidv4());
+  const [createdAt, setCreatedAt] = useState(new Date());
 
   useEffect(() => {
-    saveVote({ widgetId, voteType, apolloClient });
+    saveVote({ widgetId, voteId, voteType, apolloClient });
   }, []);
 
   async function onSubmit(answers) {
@@ -71,6 +73,9 @@ const VotePage = ({ pageContext }) => {
       mutation: SAVE_WIDGET_FEEDBACK_QUERY,
       variables: {
         widgetId,
+        voteId,
+        voteType,
+        createdAt,
         answers: JSON.stringify(answers)
       }
     });
